@@ -66,13 +66,7 @@ body {
 }
 
 .logo-text {
-    font-size: 28px;
-    font-weight: 700;
-    margin-top: 15px;
-    background: linear-gradient(135deg, var(--gold-color), #FFA500);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    display: none;
 }
 
 /* ==================== ЗАГОЛОВКИ ==================== */
