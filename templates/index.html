@@ -11,8 +11,133 @@
     <div class="container" id="app">
         <!-- Логотип -->
         <div class="logo-container">
-            <img src="/static/img/starhold-logo.png" class="logo" alt="StarHold">
-            <!-- БЕЗ logo-text если текст на PNG -->
+            <svg class="logo" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <!-- Золотой градиент -->
+                    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+                    </linearGradient>
+                    
+                    <!-- Стили для элементов -->
+                    <style>
+                        .gold-stroke { 
+                            stroke: url(#goldGradient); 
+                            stroke-width: 14; 
+                            stroke-linejoin: round; 
+                            stroke-linecap: round; 
+                            fill: none; 
+                        }
+                        .gold-fill { 
+                            fill: url(#goldGradient); 
+                        }
+                        .network-line { 
+                            stroke: #FFD700; 
+                            stroke-width: 3; 
+                            opacity: 0.5;
+                        }
+                        .network-node { 
+                            fill: #FFA500; 
+                            opacity: 0.7;
+                        }
+                        
+                        /* Анимация сетевых узлов */
+                        @keyframes nodePulse {
+                            0%, 100% { opacity: 0.3; }
+                            50% { opacity: 0.9; }
+                        }
+                        
+                        .network-node {
+                            animation: nodePulse 3s ease-in-out infinite;
+                        }
+                        
+                        .network-node:nth-child(2n) {
+                            animation-delay: 0.5s;
+                        }
+                        
+                        .network-node:nth-child(3n) {
+                            animation-delay: 1s;
+                        }
+                    </style>
+                </defs>
+
+                <!-- Сетевые узлы (анимированные) -->
+                <g id="Network">
+                    <!-- Top Left -->
+                    <path d="M180 155 L210 135 L235 150" class="network-line"/>
+                    <polygon points="180,155 186,152 186,145 180,142 174,145 174,152" class="network-node"/>
+                    <polygon points="210,135 216,132 216,125 210,122 204,125 204,132" class="network-node"/>
+                    <polygon points="235,150 241,147 241,140 235,137 229,140 229,147" class="network-node"/>
+                    
+                    <!-- Top Right -->
+                    <path d="M280 150 L305 135 L330 150" class="network-line"/>
+                    <polygon points="280,150 286,147 286,140 280,137 274,140 274,147" class="network-node"/>
+                    <polygon points="305,135 311,132 311,125 305,122 299,125 299,132" class="network-node"/>
+                    <polygon points="330,150 336,147 336,140 330,137 324,140 324,147" class="network-node"/>
+
+                    <!-- Bottom Left -->
+                    <path d="M190 270 L155 270 L155 240 L180 225" class="network-line"/>
+                    <polygon points="155,270 161,267 161,260 155,257 149,260 149,267" class="network-node"/>
+                    <polygon points="155,240 161,237 161,230 155,227 149,230 149,237" class="network-node"/>
+
+                    <!-- Bottom Right -->
+                    <path d="M320 280 L355 270 L355 240 L330 225" class="network-line"/>
+                    <polygon points="355,270 361,267 361,260 355,257 349,260 349,267" class="network-node"/>
+                    <polygon points="355,240 361,237 361,230 355,227 349,230 349,237" class="network-node"/>
+
+                    <!-- Bottom Center -->
+                    <path d="M230 300 L256 315 L280 300" class="network-line"/>
+                    <polygon points="256,315 262,312 262,305 256,302 250,305 250,312" class="network-node"/>
+                </g>
+
+                <!-- Звезда от Gemini (с анимацией) -->
+                <g id="StarSymbol">
+                    <path d="M256 105 
+                             L285 190 
+                             L375 190 
+                             L305 245 
+                             L330 325 
+                             L256 270 
+                             L182 325 
+                             L207 245 
+                             L137 190 
+                             L227 190 
+                             Z" 
+                          class="gold-stroke"/>
+                    
+                    <!-- Внутренний круг для акцента -->
+                    <circle cx="256" cy="230" r="40" 
+                            stroke="url(#goldGradient)" 
+                            stroke-width="6" 
+                            fill="none"
+                            opacity="0.8">
+                        <animate attributeName="r" 
+                                 values="35;42;35" 
+                                 dur="2s" 
+                                 repeatCount="indefinite"/>
+                        <animate attributeName="opacity" 
+                                 values="0.6;1;0.6" 
+                                 dur="2s" 
+                                 repeatCount="indefinite"/>
+                    </circle>
+                </g>
+
+                <!-- Текст "StarHold" -->
+                <text x="256" y="410" 
+                      font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
+                      font-size="56" 
+                      font-weight="700" 
+                      fill="url(#goldGradient)" 
+                      text-anchor="middle"
+                      letter-spacing="3">
+                    StarHold
+                    <!-- Анимация текста -->
+                    <animate attributeName="opacity" 
+                             values="0.85;1;0.85" 
+                             dur="3s" 
+                             repeatCount="indefinite"/>
+                </text>
+            </svg>
         </div>
 
         <!-- ==================== ОСНОВНОЙ WEBAPP ==================== -->
