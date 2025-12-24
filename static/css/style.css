@@ -18,6 +18,7 @@
     
     /* Кастомные цвета */
     --gold-color: #FFD700;
+    --gold-secondary: #FFA500;
     --success-color: #4CAF50;
     --error-color: #f44336;
     --grey-inactive: #9e9e9e;
@@ -58,15 +59,27 @@ body {
 }
 
 .logo {
-    width: 120px;
-    height: 120px;
+    width: 160px;
+    height: 160px;
     margin: 0 auto;
-    filter: drop-shadow(0 4px 8px rgba(255, 215, 0, 0.3));
-    animation: pulse 2s infinite;
+    filter: drop-shadow(0 6px 16px rgba(255, 215, 0, 0.4));
+    animation: logoFloat 3s ease-in-out infinite;
+}
+
+/* Анимация плавного парения логотипа */
+@keyframes logoFloat {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+        filter: drop-shadow(0 6px 16px rgba(255, 215, 0, 0.4));
+    }
+    50% {
+        transform: translateY(-10px) rotate(2deg);
+        filter: drop-shadow(0 10px 24px rgba(255, 215, 0, 0.6));
+    }
 }
 
 .logo-text {
-    display: none;
+    display: none; /* Скрыт, т.к. текст теперь внутри SVG */
 }
 
 /* ==================== ЗАГОЛОВКИ ==================== */
@@ -221,6 +234,7 @@ h2 {
     border-color: var(--blue-active);
     background: var(--blue-active);
     color: white;
+    transform: scale(1.05);
 }
 
 .code-digit.error {
@@ -341,249 +355,6 @@ h2 {
     height: 300px;
 }
 
-/* ==================== ЭКРАН УСПЕХА ==================== */
-
-.success-screen {
-    text-align: center;
-    padding: 40px 20px;
-    animation: fadeInUp 0.6s ease;
-}
-
-.success-icon {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 30px auto;
-    background: var(--success-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: scaleCheckmark 0.6s ease;
-    box-shadow: var(--glow-green);
-}
-
-.success-icon svg {
-    width: 60px;
-    height: 60px;
-    stroke: white;
-    stroke-width: 3;
-    fill: none;
-    stroke-dasharray: 100;
-    stroke-dashoffset: 100;
-    animation: drawCheckmark 0.8s ease 0.3s forwards;
-}
-
-.success-title {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--success-color);
-    margin-bottom: 10px;
-}
-
-.success-message {
-    font-size: 16px;
-    color: var(--tg-theme-hint-color);
-    margin-bottom: 30px;
-}
-
-.status-box {
-    background: var(--tg-theme-secondary-bg-color);
-    border-radius: 16px;
-    padding: 20px;
-    margin: 30px 0;
-    text-align: left;
-}
-
-.status-title {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.status-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--tg-theme-bg-color);
-}
-
-.status-item:last-child {
-    border-bottom: none;
-}
-
-.status-label {
-    font-size: 14px;
-    color: var(--tg-theme-hint-color);
-}
-
-.status-value {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--tg-theme-text-color);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.status-value.success::before {
-    content: '✓';
-    color: var(--success-color);
-    font-size: 18px;
-}
-
-.status-value.pending::before {
-    content: '⏳';
-    font-size: 16px;
-}
-
-/* ==================== ЗАГРУЗЧИК ==================== */
-
-.loader {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid var(--tg-theme-secondary-bg-color);
-    border-top-color: var(--blue-active);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-}
-
-.loader-container {
-    text-align: center;
-    padding: 40px 20px;
-}
-
-.loader-big {
-    width: 50px;
-    height: 50px;
-    border-width: 4px;
-}
-
-/* ==================== АНИМАЦИИ ==================== */
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-}
-
-@keyframes pulse-glow {
-    0%, 100% {
-        box-shadow: 0 0 10px rgba(33, 150, 243, 0.3);
-    }
-    50% {
-        box-shadow: 0 0 20px rgba(33, 150, 243, 0.6);
-    }
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes shake {
-    0%, 100% {
-        transform: translateX(0);
-    }
-    25% {
-        transform: translateX(-10px);
-    }
-    75% {
-        transform: translateX(10px);
-    }
-}
-
-@keyframes scaleCheckmark {
-    0% {
-        transform: scale(0);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-@keyframes drawCheckmark {
-    to {
-        stroke-dashoffset: 0;
-    }
-}
-
-/* ==================== РЕСПОНСИВ ==================== */
-
-@media (max-width: 360px) {
-    .code-digit {
-        width: 45px;
-        height: 55px;
-        font-size: 24px;
-    }
-    
-    .keypad-button {
-        padding: 16px;
-        font-size: 20px;
-    }
-}
-
-/* ==================== ТЕМНАЯ ТЕМА ==================== */
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --tg-theme-bg-color: #1a1a1a;
-        --tg-theme-text-color: #ffffff;
-        --tg-theme-hint-color: #8e8e93;
-        --tg-theme-secondary-bg-color: #2c2c2e;
-    }
-}
-
-/* ==================== СКРЫТИЕ ЭЛЕМЕНТОВ ==================== */
-
-.hidden {
-    display: none !important;
-}
-
-.fade-out {
-    animation: fadeOut 0.3s ease forwards;
-}
-
-@keyframes fadeOut {
-    to {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-}
-
-/* Добавить в конец файла style.css */
-
 /* ==================== ТАБЫ НАВИГАЦИИ ==================== */
 
 .tabs {
@@ -640,12 +411,13 @@ h2 {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--gold-color), #FFA500);
+    background: linear-gradient(135deg, var(--gold-color), var(--gold-secondary));
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 30px;
     box-shadow: var(--shadow-md);
+    animation: pulse 2s infinite;
 }
 
 .profile-info {
@@ -682,6 +454,7 @@ h2 {
     background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
     border: 2px solid var(--gold-color);
     box-shadow: var(--glow-gold);
+    border-radius: 16px;
 }
 
 .balance-icon {
@@ -930,6 +703,126 @@ h2 {
     opacity: 0.7;
 }
 
+/* ==================== ЭКРАН УСПЕХА ==================== */
+
+.success-screen {
+    text-align: center;
+    padding: 40px 20px;
+    animation: fadeInUp 0.6s ease;
+}
+
+.success-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 30px auto;
+    background: var(--success-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: scaleCheckmark 0.6s ease;
+    box-shadow: var(--glow-green);
+}
+
+.success-icon svg {
+    width: 60px;
+    height: 60px;
+    stroke: white;
+    stroke-width: 3;
+    fill: none;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: drawCheckmark 0.8s ease 0.3s forwards;
+}
+
+.success-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--success-color);
+    margin-bottom: 10px;
+}
+
+.success-message {
+    font-size: 16px;
+    color: var(--tg-theme-hint-color);
+    margin-bottom: 30px;
+}
+
+.status-box {
+    background: var(--tg-theme-secondary-bg-color);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 30px 0;
+    text-align: left;
+}
+
+.status-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--tg-theme-bg-color);
+}
+
+.status-item:last-child {
+    border-bottom: none;
+}
+
+.status-label {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color);
+}
+
+.status-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--tg-theme-text-color);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-value.success::before {
+    content: '✓';
+    color: var(--success-color);
+    font-size: 18px;
+}
+
+.status-value.pending::before {
+    content: '⏳';
+    font-size: 16px;
+}
+
+/* ==================== ЗАГРУЗЧИК ==================== */
+
+.loader {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--tg-theme-secondary-bg-color);
+    border-top-color: var(--blue-active);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.loader-container {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.loader-big {
+    width: 50px;
+    height: 50px;
+    border-width: 4px;
+}
+
 /* ==================== СКРОЛЛБАР ==================== */
 
 .gifts-selection-list::-webkit-scrollbar {
@@ -948,4 +841,130 @@ h2 {
 
 .gifts-selection-list::-webkit-scrollbar-thumb:hover {
     background: var(--blue-active);
-                     }
+}
+
+/* ==================== АНИМАЦИИ ==================== */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(33, 150, 243, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(33, 150, 243, 0.6);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+@keyframes scaleCheckmark {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes drawCheckmark {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* ==================== РЕСПОНСИВ ==================== */
+
+@media (max-width: 360px) {
+    .code-digit {
+        width: 45px;
+        height: 55px;
+        font-size: 24px;
+    }
+    
+    .keypad-button {
+        padding: 16px;
+        font-size: 20px;
+    }
+    
+    .logo {
+        width: 140px;
+        height: 140px;
+    }
+}
+
+/* ==================== ТЕМНАЯ ТЕМА ==================== */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --tg-theme-bg-color: #1a1a1a;
+        --tg-theme-text-color: #ffffff;
+        --tg-theme-hint-color: #8e8e93;
+        --tg-theme-secondary-bg-color: #2c2c2e;
+    }
+}
+
+/* ==================== СКРЫТИЕ ЭЛЕМЕНТОВ ==================== */
+
+.hidden {
+    display: none !important;
+}
+
+.fade-out {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
